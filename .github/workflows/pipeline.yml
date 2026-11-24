@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Pruebas del backend (mvn test)
-        run: docker run --rm -v "$PWD/Ecommerce-Backend":/src maven:3.9-eclipse-temurin-21 sh -c "cp -r /src /app && cd /app && mvn -B test"
+        run: docker run --rm -v "$PWD/Ecommerce-Backend":/src maven:3.9-eclipse-temurin-21 sh -c "cp -r /src /app && cd /app && mvn -B clean test"
 
   build:
     needs: test
