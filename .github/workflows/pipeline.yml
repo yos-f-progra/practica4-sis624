@@ -1,0 +1,31 @@
+name: CI-CD Ecommerce
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pruebas del backend (mvn test)
+        run: docker run --rm -v "$PWD/Ecommerce-Backend":/src maven:3.9-eclipse-temurin-21 sh -c "cp -r /src /app && cd /app && mvn -B test"
+
+  build:
+    needs: test
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir imagenes Docker
+        run: docker compose build
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Levantar contenedores
+        run: docker compose up -d
+      - name: Ver contenedores
+        run: docker compose ps
